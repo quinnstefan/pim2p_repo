@@ -5,13 +5,13 @@ using namespace std;
 const double masspi = 0.13957;
 
 
-void datareducer()
+void datareducer(const char *inputfilename, const char *inputTreename, const char *outfilename)
 
 {cerr << "Hello world\n";
-TFile *inputFile = new TFile("../flattree_pim2p_090215.root");
-TTree *inputTree = (TTree*) inputFile->Get("gd_pimprotprotinc__B4_F4_T1_S4");
-TFile *fout = new TFile("../myoutput.root","RECREATE");
-TTree *outputTree = new TTree("T","Output of my test script");
+TFile *inputFile = new TFile(inputfilename);
+TTree *inputTree = (TTree*) inputFile->Get(inputTreename);
+TFile *fout = new TFile(outfilename,"RECREATE");
+TTree *outputTree = new TTree(outfilename,outfilename);
 
 float kin_chisq;
 UInt_t kin_ndf;
