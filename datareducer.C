@@ -5,13 +5,19 @@ using namespace std;
 const double masspi = 0.13957;
 
 
-void datareducer(const char *inputfilename, const char *inputTreename, const char *outfilename)
+//void datareducer(const char *inputfilename, const char *inputTreename, const char *outfilename)
+void datareducer()
 
 {cerr << "Hello world\n";
-TFile *inputFile = new TFile(inputfilename);
-TTree *inputTree = (TTree*) inputFile->Get(inputTreename);
-TFile *fout = new TFile(outfilename,"RECREATE");
-TTree *outputTree = new TTree(outfilename,outfilename);
+//TFile *inputFile = new TFile(inputfilename);
+//TTree *inputTree = (TTree*) inputFile->Get(inputTreename);
+//TFile *fout = new TFile(outfilename,"RECREATE");
+//TTree *outputTree = new TTree(outfilename,outfilename);
+
+TFile *inputFile = new TFile("../flattree_pim2p_090215.root");
+TTree *inputTree = (TTree*) inputFile->Get("gd_pimprotprotinc__B4_F4_T1_S4");
+TFile *fout = new TFile("myoutput.root","RECREATE");
+TTree *outputTree = new TTree("T","Output of my test script");
 
 float kin_chisq;
 UInt_t kin_ndf;
@@ -120,9 +126,8 @@ TH1D *h_PlusBalance_uncut = new TH1D("PlusBalance_UNCUT","Plus Balance UNCUT;Ene
 TH1D *h_MinusBalance_uncut = new TH1D("MinusBalance_UNCUT","Minus Balance UNCUT;Energy Balance;Counts", 200, -10, 10);
   hist_list.push_back(h_MinusBalance_uncut);
 
-
-//TH1D *h_MinusBalance_rhocut = new TH1D("MinusBalance_rhoCUT","Minus Balance Rho CUT;Energy Balance;Counts", 200, -10, 10);
-//  hist_list.push_back(h_MinusBalance_rhocut);
+TH1D *h_MinusBalance_uncut_zoom = new TH1D("MinusBalance_UNCUT_zoom","Minus Balance UNCUT Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_list.push_back(h_MinusBalance_uncut_zoom);
 
 TH2D *h_Proton1AngleVsMom = new TH2D("Proton1AngleVsMom", "Proton 1 Angle vs Momentum;Angle;Momentum;Counts", 200, 0, 180, 200, 0, 3);
   hist_list.push_back(h_Proton1AngleVsMom);
@@ -132,7 +137,6 @@ TH2D *h_Proton2AngleVsMom = new TH2D("Proton2AngleVsMom", "Proton 2 Angle vs Mom
 
 TH2D *h_PiMinusAngleVsMom = new TH2D("PiMinusAngleVsMom", "Pi Minus Angle vs Momentum;Angle;Momentum;Counts", 200, 0, 180, 200, 0, 3);
   hist_list.push_back(h_PiMinusAngleVsMom);
-
 
 TH1D *h_PossibleRho = new TH1D("PossibleRho", "Possible Rho Mass Distribution;Mass[GeV];Counts", 50, 0, 3);
   hist_list.push_back(h_PossibleRho);
@@ -149,8 +153,14 @@ TH1D *h_EB_cut = new TH1D("EnergyBalance_CUT","Energy Balance CUT;Energy Balance
 TH2D *h_PlusvsMinus = new TH2D("PlusvsMinus", "Plus Balance vs Minus Balance;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_list.push_back(h_PlusvsMinus);
 
+TH2D *h_PlusvsMinus_zoom = new TH2D("PlusvsMinus_Zoom", "Plus Balance vs Minus Balance Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_list.push_back(h_PlusvsMinus_zoom);
+
 TH2D *h_MinusvsRho = new TH2D("MinusvsRho", "Minus Balance vs Possible Rho Mass; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_list.push_back(h_MinusvsRho);
+
+TH2D *h_MinusvsRho_zoom = new TH2D("MinusvsRho_Zoom", "Minus Balance vs Possible Rho Mass Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_list.push_back(h_MinusvsRho_zoom);
 
 for (int h = 0; h < hist_list.size();h++) {
 	hist_list[h]->Sumw2();}
@@ -227,14 +237,23 @@ TH1D *h_PlusBalance_Xcut = new TH1D("PlusBalance_XCUT","Plus Balance After X Bal
 TH1D *h_MinusBalance_Xcut = new TH1D("MinusBalance_XCUT","Minus Balance After X Balance Cut;Energy Balance;Counts", 200, -10, 10);
   hist_Xcut.push_back(h_MinusBalance_Xcut);
 
+TH1D *h_MinusBalance_Xcut_zoom = new TH1D("MinusBalance_XCUT_zoom","Minus Balance XCUT Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_Xcut.push_back(h_MinusBalance_Xcut_zoom);
+
 TH1D *h_PossibleRho_Xcut = new TH1D("PossibleRho_XCUT", "Possible Rho Mass Distribution After X Cut;Mass[GeV];Counts", 50, 0, 3);
   hist_Xcut.push_back(h_PossibleRho_Xcut);
 
 TH2D *h_PlusvsMinus_Xcut = new TH2D("PlusvsMinus_Xcut", "Plus Balance vs Minus Balance After X Cut;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_Xcut.push_back(h_PlusvsMinus_Xcut);
 
+TH2D *h_PlusvsMinus_Xcut_zoom = new TH2D("PlusvsMinus_Xcut_Zoom", "Plus Balance vs Minus Balance X Cut Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_Xcut.push_back(h_PlusvsMinus_Xcut_zoom);
+
 TH2D *h_MinusvsRho_Xcut = new TH2D("MinusvsRho_Xcut", "Minus Balance vs Possible Rho Mass After X Cut; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_Xcut.push_back(h_MinusvsRho_Xcut);
+
+TH2D *h_MinusvsRho_Xcut_zoom = new TH2D("MinusvsRho_Xcut_Zoom", "Minus Balance vs Possible Rho Mass X Cut Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_Xcut.push_back(h_MinusvsRho_Xcut_zoom);
 
 for (int h = 0; h < hist_Xcut.size();h++) {
 	hist_Xcut[h]->Sumw2();}
@@ -302,14 +321,23 @@ TH1D *h_PlusBalance_Ycut = new TH1D("PlusBalance_YCUT","Plus Balance After Y Bal
 TH1D *h_MinusBalance_Ycut = new TH1D("MinusBalance_YCUT","Minus Balance After Y Balance Cut;Energy Balance;Counts", 200, -10, 10);
   hist_Ycut.push_back(h_MinusBalance_Ycut);
 
+TH1D *h_MinusBalance_Ycut_zoom = new TH1D("MinusBalance_YCUT_zoom","Minus Balance YCUT Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_Ycut.push_back(h_MinusBalance_Ycut_zoom);
+
 TH1D *h_PossibleRho_Ycut = new TH1D("PossibleRho_YCUT", "Possible Rho Mass Distribution After Y Cut;Mass[GeV];Counts", 50, 0, 3);
   hist_Ycut.push_back(h_PossibleRho_Ycut);
 
 TH2D *h_PlusvsMinus_Ycut = new TH2D("PlusvsMinus_Ycut", "Plus Balance vs Minus Balance After Y Cut;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_Ycut.push_back(h_PlusvsMinus_Ycut);
 
+TH2D *h_PlusvsMinus_Ycut_zoom = new TH2D("PlusvsMinus_Ycut_Zoom", "Plus Balance vs Minus Balance Y Cut Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_Ycut.push_back(h_PlusvsMinus_Ycut_zoom);
+
 TH2D *h_MinusvsRho_Ycut = new TH2D("MinusvsRho_Ycut", "Minus Balance vs Possible Rho Mass After Y Cut; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_Ycut.push_back(h_MinusvsRho_Ycut);
+
+TH2D *h_MinusvsRho_Ycut_zoom = new TH2D("MinusvsRho_Ycut_Zoom", "Minus Balance vs Possible Rho Mass Y Cut Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_Ycut.push_back(h_MinusvsRho_Ycut_zoom);
 
 for (int h = 0; h < hist_Ycut.size();h++) {
 	hist_Ycut[h]->Sumw2();}
@@ -377,14 +405,23 @@ TH1D *h_PlusBalance_Pluscut = new TH1D("PlusBalance_PlusCUT","Plus Balance After
 TH1D *h_MinusBalance_Pluscut = new TH1D("MinusBalance_PlusCUT","Minus Balance After Plus Balance Cut;Energy Balance;Counts", 200, -10, 10);
   hist_Pluscut.push_back(h_MinusBalance_Pluscut);
 
+TH1D *h_MinusBalance_Pluscut_zoom = new TH1D("MinusBalance_PlusCUT_zoom","Minus Balance PlusCUT Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_Pluscut.push_back(h_MinusBalance_Pluscut_zoom);
+
 TH1D *h_PossibleRho_Pluscut = new TH1D("PossibleRho_PlusCUT", "Possible Rho Mass Distribution After Plus Cut;Mass[GeV];Counts", 50, 0, 3);
   hist_Pluscut.push_back(h_PossibleRho_Pluscut);
 
 TH2D *h_PlusvsMinus_Pluscut = new TH2D("PlusvsMinus_Pluscut", "Plus Balance vs Minus Balance After Plus Cut;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_Pluscut.push_back(h_PlusvsMinus_Pluscut);
 
+TH2D *h_PlusvsMinus_Pluscut_zoom = new TH2D("PlusvsMinus_Pluscut_Zoom", "Plus Balance vs Minus Balance Plus Cut Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_Pluscut.push_back(h_PlusvsMinus_Pluscut_zoom);
+
 TH2D *h_MinusvsRho_Pluscut = new TH2D("MinusvsRho_Pluscut", "Minus Balance vs Possible Rho Mass After Plus Cut; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_Pluscut.push_back(h_MinusvsRho_Pluscut);
+
+TH2D *h_MinusvsRho_Pluscut_zoom = new TH2D("MinusvsRho_Pluscut_Zoom", "Minus Balance vs Possible Rho Mass Plus Cut Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_Pluscut.push_back(h_MinusvsRho_Pluscut_zoom);
 
 for (int h = 0; h < hist_Pluscut.size();h++) {
 	hist_Pluscut[h]->Sumw2();}
@@ -451,14 +488,23 @@ TH1D *h_PlusBalance_rhocut = new TH1D("PlusBalance_rhoCUT","Plus Balance After P
 TH1D *h_MinusBalance_rhocut = new TH1D("MinusBalance_rhoCUT","Minus Balance After Possible Rho Cut;Energy Balance;Counts", 200, -10, 10);
   hist_rhocut.push_back(h_MinusBalance_rhocut);
 
+TH1D *h_MinusBalance_rhocut_zoom = new TH1D("MinusBalance_rhoCUT_zoom","Minus Balance rhoCUT Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_rhocut.push_back(h_MinusBalance_rhocut_zoom);
+
 TH1D *h_PossibleRho_rhocut = new TH1D("PossibleRho_rhoCUT", "Possible Rho Mass Distribution After Possible Rho Cut;Mass[GeV];Counts", 50, 0, 3);
   hist_rhocut.push_back(h_PossibleRho_rhocut);
 
 TH2D *h_PlusvsMinus_rhocut = new TH2D("PlusvsMinus_rhocut", "Plus Balance vs Minus Balance After Possible Rho Cut;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_rhocut.push_back(h_PlusvsMinus_rhocut);
 
+TH2D *h_PlusvsMinus_rhocut_zoom = new TH2D("PlusvsMinus_rhocut_Zoom", "Plus Balance vs Minus Balance Rho Cut Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_rhocut.push_back(h_PlusvsMinus_rhocut_zoom);
+
 TH2D *h_MinusvsRho_rhocut = new TH2D("MinusvsRho_rhocut", "Minus Balance vs Possible Rho Mass After Rho Cut; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_rhocut.push_back(h_MinusvsRho_rhocut);
+
+TH2D *h_MinusvsRho_rhocut_zoom = new TH2D("MinusvsRho_rhocut_Zoom", "Minus Balance vs Possible Rho Mass Rho Cut Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_rhocut.push_back(h_MinusvsRho_rhocut_zoom);
 
 for (int h = 0; h < hist_rhocut.size();h++) {
 	hist_rhocut[h]->Sumw2();}
@@ -523,14 +569,23 @@ TH1D *h_PlusBalance_minuscut = new TH1D("PlusBalance_minusCUT","Plus Balance Aft
 TH1D *h_MinusBalance_minuscut = new TH1D("MinusBalance_minusCUT","Minus Balance After Minus Balance Cut;Energy Balance;Counts", 200, -10, 10);
   hist_minuscut.push_back(h_MinusBalance_minuscut);
 
+TH1D *h_MinusBalance_minuscut_zoom = new TH1D("MinusBalance_minusCUT_zoom","Minus Balance After Minus Balance Cut Zoomed;Energy Balance;Counts", 200, -0.5, 0.5);
+  hist_minuscut.push_back(h_MinusBalance_minuscut_zoom);
+
 TH1D *h_PossibleRho_minuscut = new TH1D("PossibleRho_minusCUT", "Possible Rho Mass Distribution After Minus Balance Cut;Mass[GeV];Counts", 50, 0, 3);
   hist_minuscut.push_back(h_PossibleRho_minuscut);
 
 TH2D *h_PlusvsMinus_minuscut = new TH2D("PlusvsMinus_minuscut", "Plus Balance vs Minus Balance After Minus Balance Cut;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -10, 10);
   hist_minuscut.push_back(h_PlusvsMinus_minuscut);
 
+TH2D *h_PlusvsMinus_minuscut_zoom = new TH2D("PlusvsMinus_minuscut_Zoom", "Plus Balance vs Minus Balance Minus Cut Zoom;Plus Balance;Minus Balance;Counts", 200, -10, 10, 200, -1.5, 1.5);
+  hist_minuscut.push_back(h_PlusvsMinus_minuscut_zoom);
+
 TH2D *h_MinusvsRho_minuscut = new TH2D("MinusvsRho_minuscut", "Minus Balance vs Possible Rho Mass After Minus Cut; Minus Balance;Possible Rho Mass;Counts", 200, -10, 10, 50, 0, 3);
   hist_minuscut.push_back(h_MinusvsRho_minuscut);
+
+TH2D *h_MinusvsRho_minuscut_zoom = new TH2D("MinusvsRho_minuscut_Zoom", "Minus Balance vs Possible Rho Mass Minus Cut Zoom; Minus Balance;Possible Rho Mass;Counts", 200, -1.5, 1.5, 50, 0, 3);
+  hist_minuscut.push_back(h_MinusvsRho_minuscut_zoom);
 
 for (int h = 0; h < hist_minuscut.size();h++) {
 	hist_minuscut[h]->Sumw2();}
@@ -591,6 +646,7 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_uncut->Fill(EB.X(),weight);
     h_PlusBalance_uncut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_uncut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_uncut_zoom->Fill(EB.E()-EB.Z(),weight);	
     h_Proton1AngleVsMom->Fill(p4_prot1_kin->Theta() * 180/M_PI,p4_prot1_kin->Vect().Mag(),weight);
     h_Proton2AngleVsMom->Fill(p4_prot2_kin->Theta() * 180/M_PI,p4_prot2_kin->Vect().Mag(),weight);    
     h_PiMinusAngleVsMom->Fill(p4_pim_kin->Theta() * 180/M_PI,p4_pim_kin->Vect().Mag(),weight);
@@ -614,7 +670,9 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
 
 
     h_PlusvsMinus->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 
 // when minus balance is around zero
@@ -650,10 +708,13 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_Xcut->Fill(EB.X(),weight);
     h_PlusBalance_Xcut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_Xcut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_Xcut_zoom->Fill(EB.E()-EB.Z(),weight);	
     h_PossibleRho_Xcut->Fill(possible_rho.M(),weight);
 
     h_PlusvsMinus_Xcut->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_Xcut_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho_Xcut->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_Xcut_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 // when minus balance is around zero (after X cut)
     if (((EB.E()-EB.Z()) > -0.2) and ((EB.E()-EB.Z()) < 0.2)){ 
@@ -684,10 +745,13 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_Ycut->Fill(EB.X(),weight);
     h_PlusBalance_Ycut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_Ycut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_Ycut_zoom->Fill(EB.E()-EB.Z(),weight);	
     h_PossibleRho_Ycut->Fill(possible_rho.M(),weight);
 
     h_PlusvsMinus_Ycut->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_Ycut_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho_Ycut->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_Ycut_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 // when minus balance is around zero (after Y cut)
     if (((EB.E()-EB.Z()) > -0.2) and ((EB.E()-EB.Z()) < 0.2)){ 
@@ -718,10 +782,13 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_Pluscut->Fill(EB.X(),weight);
     h_PlusBalance_Pluscut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_Pluscut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_Pluscut_zoom->Fill(EB.E()-EB.Z(),weight);	
     h_PossibleRho_Pluscut->Fill(possible_rho.M(),weight);
 
     h_PlusvsMinus_Pluscut->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_Pluscut_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho_Pluscut->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_Pluscut_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 // when minus balance is around zero (after Plus cut)
     if (((EB.E()-EB.Z()) > -0.2) and ((EB.E()-EB.Z()) < 0.2)){ 
@@ -763,10 +830,13 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_rhocut->Fill(EB.X(),weight);
     h_PlusBalance_rhocut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_rhocut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_rhocut_zoom->Fill(EB.E()-EB.Z(),weight);	
     h_PossibleRho_rhocut->Fill(possible_rho.M(),weight);
     
     h_PlusvsMinus_rhocut->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_rhocut_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho_rhocut->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_rhocut_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 // when minus balance is around zero (after rho cut)
     if (((EB.E()-EB.Z()) > -0.2) and ((EB.E()-EB.Z()) < 0.2)){ 
@@ -797,10 +867,14 @@ for (int event = 0; event < inputTree->GetEntries(); event++) {
     h_XB_minuscut->Fill(EB.X(),weight);
     h_PlusBalance_minuscut->Fill(EB.E()+EB.Z(),weight);
     h_MinusBalance_minuscut->Fill(EB.E()-EB.Z(),weight);
+    h_MinusBalance_minuscut_zoom->Fill(EB.E()-EB.Z(),weight);	
+
     h_PossibleRho_minuscut->Fill(possible_rho.M(),weight);
 
     h_PlusvsMinus_minuscut->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
+    h_PlusvsMinus_minuscut_zoom->Fill(EB.E()+EB.Z(),EB.E()-EB.Z(),weight);
     h_MinusvsRho_minuscut->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
+    h_MinusvsRho_minuscut_zoom->Fill(EB.E()-EB.Z(),possible_rho.M(),weight);
 
 // when minus balance is around zero (after minus cut)
     if (((EB.E()-EB.Z()) > -0.2) and ((EB.E()-EB.Z()) < 0.2)){ 
